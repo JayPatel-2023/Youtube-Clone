@@ -1,6 +1,6 @@
-const asyncHandler = (fn) => async (req, res, next) => {
+const asyncHandler = (requestHandler) => async (req, res, next) => {
   try {
-    await fn(req, res, next);
+    await requestHandler(req, res, next);
   } catch (err) {
     res
       .status(err.code || 500)
@@ -13,8 +13,8 @@ export { asyncHandler };
 
 // Using Promise
 
-// const asyncHandleqr = (fn) => {
-//   (req, res, next) => {
-//     Promise.resolve(fn(req, res, next)).catch((err) => next(err));
+// const asyncHandleqr = (requestHandler) => {
+//   return (req, res, next) => {
+//     Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
 //   };
 // };

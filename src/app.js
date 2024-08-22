@@ -21,4 +21,10 @@ app.use(express.static("public"))
 // to access(CURD) users secure cookies of their browser in our server 
 app.use(cookieParser())
 
+// routes import
+import userRouter from "./routes/user.routes.js";
+
+// routes declaration
+app.use("/api/v1/users", userRouter);
+
 export { app };
