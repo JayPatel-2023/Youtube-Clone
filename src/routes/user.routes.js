@@ -41,9 +41,8 @@ router
   .route("/cover-image")
   .patch(verifyJWT, upload.single("coverImage"), updateUserCoverImage);
 
-// The ':username' is a route parameter used to capture the value from the URL.
 router
-  .route("/channel-profile/:username")
+  .route("/channel-profile")
   .get(verifyJWT, getUserChannelProfile);
 router.route("/watch-history").get(verifyJWT, getWatchHistory);
 
