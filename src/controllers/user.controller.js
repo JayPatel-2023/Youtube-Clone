@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/apiError.js";
 import { User } from "../models/user.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { uploadOnCloudinary, deleteOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import jwt from "jsonwebtoken";
 
@@ -307,7 +307,13 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Avatar file is missing");
   }
 
-  // TODO: delete old image from cloudinary
+  // delete old Avatar image from cloudinary
+  const user = await User.findById(req.user?._id);
+  const deletedAvatar = await deleteOnCloudinary(user?.avatar);
+
+  if (deletedAvatar) {
+    console.log("Old avatar image deleted successfully");
+  }
 
   // upload avatar on cloudinary
   const avatar = await uploadOnCloudinary(avatarLocalPath);
@@ -317,7 +323,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   }
 
   // update user avatar path in db
-  const user = await User.findByIdAndUpdate(
+  user = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set: {
@@ -343,7 +349,13 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Cover image file is missing");
   }
 
-  // TODO: delete old image from cloudinary
+  // delete old image from cloudinary
+  const user = await User.findById(req.user?._id);
+  const deletedCoverImage = await deleteOnCloudinary(user?.avatar);
+
+  if (deletedCoverImage) {
+    console.log("Old avatar image deleted successfully");
+  }
 
   // upload cover image on cloudinary
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
@@ -353,7 +365,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
   }
 
   // update user cover image path in db
-  const user = await User.findByIdAndUpdate(
+  user = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set: {
